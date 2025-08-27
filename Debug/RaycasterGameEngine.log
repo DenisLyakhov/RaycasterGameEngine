@@ -1,0 +1,5 @@
+﻿  main.cpp
+C:\Users\doom3\Desktop\Project\New folder\RaycasterGameEngine\main.cpp(11,28): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\doom3\Desktop\Project\New folder\RaycasterGameEngine\main.cpp(11,23): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\doom3\Desktop\Project\New folder\RaycasterGameEngine\main.cpp(11,18): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+  RaycasterGameEngine.vcxproj -> C:\Users\doom3\Desktop\Project\New folder\RaycasterGameEngine\Debug\RaycasterGameEngine.exe
