@@ -2,6 +2,9 @@
 #include <GL/glu.h>
 #include <GL/GL.h>
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+
 float playerX;
 float playerY;
 
@@ -25,14 +28,14 @@ void init() {
     playerY = 300;
 
     glClearColor(0.3, 0.3, 0.3, 0);
-    gluOrtho2D(0, 800, 600, 0);
+    gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 }
 
 int main(int argc, char* argv[])
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutCreateWindow("Default window");
     init();
     glutDisplayFunc(display);
