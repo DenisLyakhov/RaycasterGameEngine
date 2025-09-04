@@ -40,9 +40,6 @@ int levelObstacles[] = {
 };
 
 void drawLevelObstacles() {
-
-    std::cout << levelObstacles[14];
-
     for (int i = 0; i < levelWidth; i++) {
         for (int j = 0; j < levelHeight; j++) {
             if (levelObstacles[j * levelHeight + i] == 1) {
@@ -106,7 +103,11 @@ void drawPlayer() {
     glVertex2i(playerX, playerY);
     glEnd();
 
-    // TODO: add direction vector
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glVertex2i(playerX, playerY);
+    glVertex2i(playerX + dirX * 5, playerY + dirY * 5);
+    glEnd();
 }
 
 void display() {
