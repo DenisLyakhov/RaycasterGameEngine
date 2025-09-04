@@ -3,12 +3,19 @@
 #include <GL/GL.h>
 
 #include <iostream>
+#include <math.h>
+
+# define M_PI           3.14159265358979323846  /* pi */
 
 #define WINDOW_WIDTH 650
 #define WINDOW_HEIGHT 650
 
 float playerX;
 float playerY;
+
+float dirX;
+float dirY;
+float dirA;
 
 float speedX;
 float speedY;
@@ -33,9 +40,6 @@ int levelObstacles[] = {
 };
 
 void drawLevelObstacles() {
-
-    std::cout << levelObstacles[14];
-
     for (int i = 0; i < levelWidth; i++) {
         for (int j = 0; j < levelHeight; j++) {
             if (levelObstacles[j * levelHeight + i] == 1) {
@@ -60,14 +64,34 @@ void drawLevelObstacles() {
 
 void movementConfig(int key, int x, int y)
 {
-    if (key == GLUT_KEY_LEFT)
-        playerX -= speedX;
-    else if (key == GLUT_KEY_RIGHT)
-        playerX += speedX;
-    else if (key == GLUT_KEY_DOWN)
-        playerY += speedY;
-    else if (key == GLUT_KEY_UP)
-        playerY -= speedY;
+    if (key == GLUT_KEY_LEFT) {
+        dirA -= 0.1;
+
+        if (dirA < 0) {
+            dirA += 2 * M_PI;
+        }
+
+        dirX = cos(dirA) * 5;
+        dirY = sin(dirA) * 5;
+    }
+    else if (key == GLUT_KEY_RIGHT) {
+        dirA += 0.1;
+
+        if (dirA > 2 * M_PI) {
+            dirA -= 2 * M_PI;
+        }
+
+        dirX = cos(dirA) * 5;
+        dirY = sin(dirA) * 5;
+    }
+    else if (key == GLUT_KEY_DOWN) {
+        playerX -= dirX;
+        playerY -= dirY;
+    }
+    else if (key == GLUT_KEY_UP) {
+        playerX += dirX;
+        playerY += dirY;
+    }
 
     glutPostRedisplay();
 }
@@ -77,6 +101,12 @@ void drawPlayer() {
     glPointSize(8);
     glBegin(GL_POINTS);
     glVertex2i(playerX, playerY);
+    glEnd();
+
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glVertex2i(playerX, playerY);
+    glVertex2i(playerX + dirX * 5, playerY + dirY * 5);
     glEnd();
 }
 
@@ -94,6 +124,9 @@ void init() {
 
     speedX = 10;
     speedY = 10;
+
+    dirX = cos(dirA) * 5;
+    dirY = sin(dirA) * 5;
 
     glClearColor(0.3, 0.3, 0.3, 0);
     gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
