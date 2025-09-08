@@ -62,6 +62,78 @@ void drawLevelObstacles() {
     }
 }
 
+void drawRays() {
+    float rayA = dirA;
+    int numOfRays = 1;
+
+    int rayX;
+    int rayY;
+
+    int offsetX;
+    int offsetY;
+
+    int wallX;
+    int wallY;
+
+    int depthOfField;
+
+    int index;
+
+    for (int ray = 0; ray < numOfRays; ray++) {
+        depthOfField = 0;
+
+        float atan = -1 / tan(rayA);
+
+        // Looking up
+        if (rayA > M_PI) {
+            // round DOWN to the nearest multiple of the blockSize
+            rayY = (((int)playerY) / 64) * 64 - 0.0001;
+            rayX = (playerY - rayY) * atan + playerX;
+
+            offsetY = -64;
+            offsetX = -offsetY * atan;
+        }
+
+        if (rayA < M_PI) {
+            // round UP to the nearest multiple of the blockSize
+            rayY = (((int)playerY) / 64) * 64 + 64;
+            rayX = (playerY - rayY) * atan + playerX;
+
+            offsetY = 64;
+            offsetX = -offsetY * atan;
+        }
+
+        if (rayA == 0 || rayA == M_PI) {
+            rayX = playerX;
+            rayY = playerY;
+            depthOfField = 8;
+        }
+
+        while (depthOfField < 8) {
+            wallX = rayX / 64;
+            wallY = rayY / 64;
+
+            index = wallY * levelWidth + wallX;
+
+            if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
+                depthOfField = 8;
+            }
+            else {
+                rayX += offsetX;
+                rayY += offsetY;
+                depthOfField += 1;
+            }
+        }
+
+        glColor3f(0, 0, 1);
+        glLineWidth(1);
+        glBegin(GL_LINES);
+        glVertex2i(playerX, playerY);
+        glVertex2i(rayX, rayY);
+        glEnd();
+    }
+}
+
 void movementConfig(int key, int x, int y)
 {
     if (key == GLUT_KEY_LEFT) {
@@ -114,6 +186,7 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     drawLevelObstacles();
     drawPlayer();
+    drawRays();
     glutSwapBuffers();
 }
 
