@@ -90,20 +90,20 @@ void drawRays() {
         // Ray pointed up
         if (rayA > M_PI) {
             // round DOWN to the nearest multiple of the blockSize
-            rayY = (((int)playerY) / 64) * 64 - 0.0001;
+            rayY = (((int)playerY) / blockSize) * blockSize - 0.0001;
             rayX = (playerY - rayY) * atan + playerX;
 
-            offsetY = -64;
+            offsetY = -blockSize;
             offsetX = -offsetY * atan;
         }
 
         // Ray pointed down
         if (rayA < M_PI) {
             // round UP to the nearest multiple of the blockSize
-            rayY = (((int)playerY) / 64) * 64 + 64;
+            rayY = (((int)playerY) / blockSize) * blockSize + blockSize;
             rayX = (playerY - rayY) * atan + playerX;
 
-            offsetY = 64;
+            offsetY = blockSize;
             offsetX = -offsetY * atan;
         }
 
@@ -116,8 +116,8 @@ void drawRays() {
 
         // Extending the ray until it reaches a wall or is out of bounds
         while (depthOfField < levelDim) {
-            wallX = rayX / 64;
-            wallY = rayY / 64;
+            wallX = rayX / blockSize;
+            wallY = rayY / blockSize;
 
             index = wallY * levelWidth + wallX;
 
