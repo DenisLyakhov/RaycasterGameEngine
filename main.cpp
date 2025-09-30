@@ -22,6 +22,7 @@ float speedY;
 
 int levelWidth = 10;
 int levelHeight = 10;
+int levelDim = 10;
 
 int blockSize = 64;
 int blockPadding = 1;
@@ -80,43 +81,48 @@ void drawRays() {
     int index;
 
     for (int ray = 0; ray < numOfRays; ray++) {
+
+        // Ray's line of sight current distance
         depthOfField = 0;
 
         float atan = -1 / tan(rayA);
 
-        // Looking up
+        // Ray pointed up
         if (rayA > M_PI) {
             // round DOWN to the nearest multiple of the blockSize
-            rayY = (((int)playerY) / 64) * 64 - 0.0001;
+            rayY = (((int)playerY) / blockSize) * blockSize - 0.0001;
             rayX = (playerY - rayY) * atan + playerX;
 
-            offsetY = -64;
+            offsetY = -blockSize;
             offsetX = -offsetY * atan;
         }
 
+        // Ray pointed down
         if (rayA < M_PI) {
             // round UP to the nearest multiple of the blockSize
-            rayY = (((int)playerY) / 64) * 64 + 64;
+            rayY = (((int)playerY) / blockSize) * blockSize + blockSize;
             rayX = (playerY - rayY) * atan + playerX;
 
-            offsetY = 64;
+            offsetY = blockSize;
             offsetX = -offsetY * atan;
         }
 
+        // Ray pointed left/right
         if (rayA == 0 || rayA == M_PI) {
             rayX = playerX;
             rayY = playerY;
-            depthOfField = 8;
+            depthOfField = levelDim;
         }
 
-        while (depthOfField < 8) {
-            wallX = rayX / 64;
-            wallY = rayY / 64;
+        // Extending the ray until it reaches a wall or is out of bounds
+        while (depthOfField < levelDim) {
+            wallX = rayX / blockSize;
+            wallY = rayY / blockSize;
 
             index = wallY * levelWidth + wallX;
 
             if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
-                depthOfField = 8;
+                depthOfField = levelDim;
             }
             else {
                 rayX += offsetX;
