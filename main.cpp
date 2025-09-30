@@ -22,6 +22,7 @@ float speedY;
 
 int levelWidth = 10;
 int levelHeight = 10;
+int levelDim = 10;
 
 int blockSize = 64;
 int blockPadding = 1;
@@ -110,18 +111,18 @@ void drawRays() {
         if (rayA == 0 || rayA == M_PI) {
             rayX = playerX;
             rayY = playerY;
-            depthOfField = 8;
+            depthOfField = levelDim;
         }
 
         // Extending the ray until it reaches a wall or is out of bounds
-        while (depthOfField < 8) {
+        while (depthOfField < levelDim) {
             wallX = rayX / 64;
             wallY = rayY / 64;
 
             index = wallY * levelWidth + wallX;
 
             if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
-                depthOfField = 8;
+                depthOfField = levelDim;
             }
             else {
                 rayX += offsetX;
