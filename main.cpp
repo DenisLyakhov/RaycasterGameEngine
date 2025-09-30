@@ -80,11 +80,13 @@ void drawRays() {
     int index;
 
     for (int ray = 0; ray < numOfRays; ray++) {
+
+        // Ray's line of sight current distance
         depthOfField = 0;
 
         float atan = -1 / tan(rayA);
 
-        // Looking up
+        // Ray pointed up
         if (rayA > M_PI) {
             // round DOWN to the nearest multiple of the blockSize
             rayY = (((int)playerY) / 64) * 64 - 0.0001;
@@ -94,6 +96,7 @@ void drawRays() {
             offsetX = -offsetY * atan;
         }
 
+        // Ray pointed down
         if (rayA < M_PI) {
             // round UP to the nearest multiple of the blockSize
             rayY = (((int)playerY) / 64) * 64 + 64;
@@ -103,12 +106,14 @@ void drawRays() {
             offsetX = -offsetY * atan;
         }
 
+        // Ray pointed left/right
         if (rayA == 0 || rayA == M_PI) {
             rayX = playerX;
             rayY = playerY;
             depthOfField = 8;
         }
 
+        // Extending the ray until it reaches a wall or is out of bounds
         while (depthOfField < 8) {
             wallX = rayX / 64;
             wallY = rayY / 64;
