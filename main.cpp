@@ -76,14 +76,14 @@ void drawRays() {
     int wallX;
     int wallY;
 
-    int depthOfField;
+    int lineOfSight;
 
     int index;
 
     for (int ray = 0; ray < numOfRays; ray++) {
 
         // Ray's line of sight current distance
-        depthOfField = 0;
+        lineOfSight = 0;
 
         float atan = -1 / tan(rayA);
 
@@ -111,23 +111,23 @@ void drawRays() {
         if (rayA == 0 || rayA == M_PI) {
             rayX = playerX;
             rayY = playerY;
-            depthOfField = levelDim;
+            lineOfSight = levelDim;
         }
 
         // Extending the ray until it reaches a wall or is out of bounds
-        while (depthOfField < levelDim) {
+        while (lineOfSight < levelDim) {
             wallX = rayX / blockSize;
             wallY = rayY / blockSize;
 
             index = wallY * levelWidth + wallX;
 
             if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
-                depthOfField = levelDim;
+                lineOfSight = levelDim;
             }
             else {
                 rayX += offsetX;
                 rayY += offsetY;
-                depthOfField += 1;
+                lineOfSight += 1;
             }
         }
 
