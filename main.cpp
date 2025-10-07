@@ -134,11 +134,83 @@ void checkCollisionHorizontal() {
     glEnd();
 }
 
+void checkCollisionVertical() {
+    float rayA = dirA;
+
+    int rayX;
+    int rayY;
+
+    int offsetX;
+    int offsetY;
+
+    int wallX;
+    int wallY;
+
+    int lineOfSight;
+
+    // Ray's line of sight current distance
+    lineOfSight = 0;
+
+    float ntan = tan(rayA);
+
+    // Ray pointed left
+    if (rayA > M_PI/2 && rayA < 3*M_PI/2) {
+        // round DOWN to the nearest multiple of the blockSize
+        rayX = (((int)playerX) / blockSize) * blockSize - 0.0001;
+        rayY = (playerX - rayX) * ntan + playerY;
+
+        offsetX = -blockSize;
+        offsetY = -offsetX * ntan;
+    }
+
+    // Ray pointed right
+    if (rayA < M_PI / 2 || rayA > 3 * M_PI / 2) {
+        // round UP to the nearest multiple of the blockSize
+        rayX = (((int)playerX) / blockSize) * blockSize + blockSize;
+        rayY = (playerX - rayX) * ntan + playerY;
+
+        offsetX = blockSize;
+        offsetX = -offsetX * ntan;
+    }
+
+    // Ray pointed up/down
+    if (rayA == 0 || rayA == M_PI) {
+        rayX = playerX;
+        rayY = playerY;
+        lineOfSight = levelDim;
+    }
+
+    // Extending the ray until it reaches a wall or is out of bounds
+    while (lineOfSight < levelDim) {
+        wallX = rayX / blockSize;
+        wallY = rayY / blockSize;
+
+        int index = wallY * levelWidth + wallX;
+
+        if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
+            lineOfSight = levelDim;
+        }
+        else {
+            rayX += offsetX;
+            rayY += offsetY;
+            lineOfSight += 1;
+        }
+    }
+
+    glColor3f(1, 0, 0);
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    glVertex2i(playerX, playerY);
+    glVertex2i(rayX, rayY);
+    glEnd();
+}
+
 void drawRays() {
     int numOfRays = 1;
 
     for (int ray = 0; ray < numOfRays; ray++) {
-        checkCollisionHorizontal();
+        //checkCollisionHorizontal();
+        checkCollisionVertical();
     }
 }
 
