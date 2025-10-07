@@ -151,7 +151,7 @@ void checkCollisionVertical() {
     // Ray's line of sight current distance
     lineOfSight = 0;
 
-    float ntan = tan(rayA);
+    float ntan = -tan(rayA);
 
     // Ray pointed left
     if (rayA > M_PI/2 && rayA < 3*M_PI/2) {
@@ -170,7 +170,7 @@ void checkCollisionVertical() {
         rayY = (playerX - rayX) * ntan + playerY;
 
         offsetX = blockSize;
-        offsetX = -offsetX * ntan;
+        offsetY = -offsetX * ntan;
     }
 
     // Ray pointed up/down
