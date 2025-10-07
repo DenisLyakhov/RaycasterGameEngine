@@ -9,6 +9,7 @@
 
 #define WINDOW_WIDTH 650
 #define WINDOW_HEIGHT 650
+#define RAYS 1
 
 float playerX;
 float playerY;
@@ -64,8 +65,6 @@ void drawLevelObstacles() {
 }
 
 void checkCollisionHorizontal() {
-    float rayA = dirA;
-
     int rayX;
     int rayY;
 
@@ -80,10 +79,10 @@ void checkCollisionHorizontal() {
     // Ray's line of sight current distance
     lineOfSight = 0;
 
-    float atan = -1 / tan(rayA);
+    float atan = -1 / tan(dirA);
 
     // Ray pointed up
-    if (rayA > M_PI) {
+    if (dirA > M_PI) {
         // round DOWN to the nearest multiple of the blockSize
         rayY = (((int)playerY) / blockSize) * blockSize - 0.0001;
         rayX = (playerY - rayY) * atan + playerX;
@@ -93,7 +92,7 @@ void checkCollisionHorizontal() {
     }
 
     // Ray pointed down
-    if (rayA < M_PI) {
+    if (dirA < M_PI) {
         // round UP to the nearest multiple of the blockSize
         rayY = (((int)playerY) / blockSize) * blockSize + blockSize;
         rayX = (playerY - rayY) * atan + playerX;
@@ -103,7 +102,7 @@ void checkCollisionHorizontal() {
     }
 
     // Ray pointed left/right
-    if (rayA == 0 || rayA == M_PI) {
+    if (dirA == 0 || dirA == M_PI) {
         rayX = playerX;
         rayY = playerY;
         lineOfSight = levelDim;
@@ -134,11 +133,79 @@ void checkCollisionHorizontal() {
     glEnd();
 }
 
-void drawRays() {
-    int numOfRays = 1;
+void checkCollisionVertical() {
+    int rayX;
+    int rayY;
 
-    for (int ray = 0; ray < numOfRays; ray++) {
-        checkCollisionHorizontal();
+    int offsetX;
+    int offsetY;
+
+    int wallX;
+    int wallY;
+
+    int lineOfSight;
+
+    // Ray's line of sight current distance
+    lineOfSight = 0;
+
+    float ntan = -tan(dirA);
+
+    // Ray pointed left
+    if (dirA > M_PI/2 && dirA < 3*M_PI/2) {
+        // round DOWN to the nearest multiple of the blockSize
+        rayX = (((int)playerX) / blockSize) * blockSize - 0.0001;
+        rayY = (playerX - rayX) * ntan + playerY;
+
+        offsetX = -blockSize;
+        offsetY = -offsetX * ntan;
+    }
+
+    // Ray pointed right
+    if (dirA < M_PI / 2 || dirA > 3 * M_PI / 2) {
+        // round UP to the nearest multiple of the blockSize
+        rayX = (((int)playerX) / blockSize) * blockSize + blockSize;
+        rayY = (playerX - rayX) * ntan + playerY;
+
+        offsetX = blockSize;
+        offsetY = -offsetX * ntan;
+    }
+
+    // Ray pointed up/down
+    if (dirA == 0 || dirA == M_PI) {
+        rayX = playerX;
+        rayY = playerY;
+        lineOfSight = levelDim;
+    }
+
+    // Extending the ray until it reaches a wall or is out of bounds
+    while (lineOfSight < levelDim) {
+        wallX = rayX / blockSize;
+        wallY = rayY / blockSize;
+
+        int index = wallY * levelWidth + wallX;
+
+        if (index >= 0 && index < levelWidth * levelHeight && levelObstacles[index] == 1) {
+            lineOfSight = levelDim;
+        }
+        else {
+            rayX += offsetX;
+            rayY += offsetY;
+            lineOfSight += 1;
+        }
+    }
+
+    glColor3f(1, 0, 0);
+    glLineWidth(1);
+    glBegin(GL_LINES);
+    glVertex2i(playerX, playerY);
+    glVertex2i(rayX, rayY);
+    glEnd();
+}
+
+void drawRays() {
+    for (int ray = 0; ray < RAYS; ray++) {
+        //checkCollisionHorizontal();
+        checkCollisionVertical();
     }
 }
 
