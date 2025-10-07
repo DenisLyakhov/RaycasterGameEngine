@@ -9,6 +9,7 @@
 
 #define WINDOW_WIDTH 650
 #define WINDOW_HEIGHT 650
+#define RAYS 1
 
 float playerX;
 float playerY;
@@ -202,9 +203,7 @@ void checkCollisionVertical() {
 }
 
 void drawRays() {
-    int numOfRays = 1;
-
-    for (int ray = 0; ray < numOfRays; ray++) {
+    for (int ray = 0; ray < RAYS; ray++) {
         //checkCollisionHorizontal();
         checkCollisionVertical();
     }
