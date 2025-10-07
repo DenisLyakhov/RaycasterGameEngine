@@ -64,8 +64,6 @@ void drawLevelObstacles() {
 }
 
 void checkCollisionHorizontal() {
-    float rayA = dirA;
-
     int rayX;
     int rayY;
 
@@ -80,10 +78,10 @@ void checkCollisionHorizontal() {
     // Ray's line of sight current distance
     lineOfSight = 0;
 
-    float atan = -1 / tan(rayA);
+    float atan = -1 / tan(dirA);
 
     // Ray pointed up
-    if (rayA > M_PI) {
+    if (dirA > M_PI) {
         // round DOWN to the nearest multiple of the blockSize
         rayY = (((int)playerY) / blockSize) * blockSize - 0.0001;
         rayX = (playerY - rayY) * atan + playerX;
@@ -93,7 +91,7 @@ void checkCollisionHorizontal() {
     }
 
     // Ray pointed down
-    if (rayA < M_PI) {
+    if (dirA < M_PI) {
         // round UP to the nearest multiple of the blockSize
         rayY = (((int)playerY) / blockSize) * blockSize + blockSize;
         rayX = (playerY - rayY) * atan + playerX;
@@ -103,7 +101,7 @@ void checkCollisionHorizontal() {
     }
 
     // Ray pointed left/right
-    if (rayA == 0 || rayA == M_PI) {
+    if (dirA == 0 || dirA == M_PI) {
         rayX = playerX;
         rayY = playerY;
         lineOfSight = levelDim;
@@ -135,8 +133,6 @@ void checkCollisionHorizontal() {
 }
 
 void checkCollisionVertical() {
-    float rayA = dirA;
-
     int rayX;
     int rayY;
 
@@ -151,10 +147,10 @@ void checkCollisionVertical() {
     // Ray's line of sight current distance
     lineOfSight = 0;
 
-    float ntan = -tan(rayA);
+    float ntan = -tan(dirA);
 
     // Ray pointed left
-    if (rayA > M_PI/2 && rayA < 3*M_PI/2) {
+    if (dirA > M_PI/2 && dirA < 3*M_PI/2) {
         // round DOWN to the nearest multiple of the blockSize
         rayX = (((int)playerX) / blockSize) * blockSize - 0.0001;
         rayY = (playerX - rayX) * ntan + playerY;
@@ -164,7 +160,7 @@ void checkCollisionVertical() {
     }
 
     // Ray pointed right
-    if (rayA < M_PI / 2 || rayA > 3 * M_PI / 2) {
+    if (dirA < M_PI / 2 || dirA > 3 * M_PI / 2) {
         // round UP to the nearest multiple of the blockSize
         rayX = (((int)playerX) / blockSize) * blockSize + blockSize;
         rayY = (playerX - rayX) * ntan + playerY;
@@ -174,7 +170,7 @@ void checkCollisionVertical() {
     }
 
     // Ray pointed up/down
-    if (rayA == 0 || rayA == M_PI) {
+    if (dirA == 0 || dirA == M_PI) {
         rayX = playerX;
         rayY = playerY;
         lineOfSight = levelDim;
